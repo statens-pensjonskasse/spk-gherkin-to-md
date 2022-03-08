@@ -13,13 +13,23 @@ import org.junit.Test;
 public class GherkinToMdConverterTest {
 
     @Test
-    public void shouldConvertFeatureToH1() throws IOException {
+    public void shouldConvertFeatureToH1_EN() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
-                        readTestFeatureFile("01_feature_only.feature")
+                        readTestFeatureFile("01_EN_feature_only.feature")
                 )
         )
                 .isEqualTo("# This is a feature");
+    }
+
+    @Test
+    public void shouldConvertFeatureToH1_NO_1() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("01_NO_1_feature_only.feature")
+                )
+        )
+                .isEqualTo("# Dette er en feature");
     }
 
     private String readTestFeatureFile(final String filename) throws IOException {
