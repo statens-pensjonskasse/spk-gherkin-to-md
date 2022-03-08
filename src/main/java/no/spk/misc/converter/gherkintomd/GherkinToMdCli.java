@@ -1,16 +1,16 @@
-import java.util.List;
+package no.spk.misc.converter.gherkintomd;
+
 import java.util.concurrent.Callable;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @SuppressWarnings("unused")
-@Command(name = "gherkintomd",
+@Command(name = "spk-gherkin-to-md",
         mixinStandardHelpOptions = true,
         description = "Convert gherkin (feature) files to markdown (md)",
-        version = "gherkintomd 1.0.0"
+        version = "spk-gherkin-to-md 0.0.1"
 )
 public class GherkinToMdCli implements Callable<Integer> {
 
