@@ -5,6 +5,7 @@ import java.util.List;
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.Converter;
+import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.NoConverter;
@@ -17,6 +18,7 @@ public class GherkinToMdConverter {
     private static final List<Converter> converters = List.of(
             new FeatureConverter(),
             new ScenarioConverter(),
+            new ExamplesConverter(),
             new GivenConverter(),
             new WhenConverter(),
             new ThenConverter(),
