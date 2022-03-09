@@ -91,6 +91,26 @@ public class GherkinToMdConverterTest {
                 .isEqualTo("  **Når** man gjør noe");
     }
 
+    @Test
+    public void shouldConvertThenToBold_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("05_EN_then_only.feature")
+                )
+        )
+                .isEqualTo("  **Then** do something");
+    }
+
+    @Test
+    public void shouldConvertThenToBold_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("05_NO_then_only.feature")
+                )
+        )
+                .isEqualTo("  **Så** gjør noe");
+    }
+
     private String readTestFeatureFile(final String filename) throws IOException {
         return Files.readString(
                 Path.of(

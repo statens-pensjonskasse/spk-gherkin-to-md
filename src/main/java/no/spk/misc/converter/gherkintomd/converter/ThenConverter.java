@@ -5,14 +5,14 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class GivenConverter {
+public class ThenConverter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
-            Language.EN, List.of("Given "),
-            Language.NO, List.of("Gitt ")
+            Language.EN, List.of("Then "),
+            Language.NO, List.of("Så ")
     );
 
-    public static boolean isGiven(final Language language, final String input) {
+    public static boolean isThen(final Language language, final String input) {
         for (final String possibleValue : possibleValues.get(language)) {
             if (input.trim().startsWith(possibleValue)) {
                 return true;

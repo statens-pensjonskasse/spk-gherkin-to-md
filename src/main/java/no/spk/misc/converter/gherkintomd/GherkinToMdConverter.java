@@ -3,6 +3,7 @@ package no.spk.misc.converter.gherkintomd;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
+import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
 
 public class GherkinToMdConverter {
@@ -24,10 +25,12 @@ public class GherkinToMdConverter {
                 sb.append(FeatureConverter.convert(language, line));
             } else if (ScenarioConverter.isScenario(language, line)) {
                 sb.append(ScenarioConverter.convert(language, line));
-            } else if (GivenConverter.isWhen(language, line)) {
+            } else if (GivenConverter.isGiven(language, line)) {
                 sb.append(GivenConverter.convert(language, line));
             } else if (WhenConverter.isWhen(language, line)) {
                 sb.append(WhenConverter.convert(language, line));
+            } else if (ThenConverter.isThen(language, line)) {
+                sb.append(ThenConverter.convert(language, line));
             } else {
                 sb.append(line);
             }
