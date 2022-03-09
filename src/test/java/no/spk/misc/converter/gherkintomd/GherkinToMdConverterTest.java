@@ -9,7 +9,6 @@ import java.nio.file.Path;
 
 import org.junit.Test;
 
-
 public class GherkinToMdConverterTest {
 
     @Test
@@ -50,6 +49,26 @@ public class GherkinToMdConverterTest {
                 )
         )
                 .isEqualTo("## Dette er en scenariomal");
+    }
+
+    @Test
+    public void shouldConvertWhenToBold_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("03_EN_when_only.feature")
+                )
+        )
+                .isEqualTo("  **When** doing something");
+    }
+
+    @Test
+    public void shouldConvertWhenToBold_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("03_NO_when_only.feature")
+                )
+        )
+                .isEqualTo("  **Når** man gjør noe");
     }
 
     private String readTestFeatureFile(final String filename) throws IOException {
