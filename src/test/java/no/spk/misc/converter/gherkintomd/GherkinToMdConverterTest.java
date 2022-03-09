@@ -32,6 +32,26 @@ public class GherkinToMdConverterTest {
                 .isEqualTo("# Dette er en feature");
     }
 
+    @Test
+    public void shouldConvertScenarioToH2_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("02_EN_scenario_only.feature")
+                )
+        )
+                .isEqualTo("## This is a scenario");
+    }
+
+    @Test
+    public void shouldConvertScenarioToH2_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("02_NO_scenario_only.feature")
+                )
+        )
+                .isEqualTo("## Dette er en scenariomal");
+    }
+
     private String readTestFeatureFile(final String filename) throws IOException {
         return Files.readString(
                 Path.of(

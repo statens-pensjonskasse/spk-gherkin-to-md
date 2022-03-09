@@ -5,14 +5,14 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class FeatureConverter {
+public class ScenarioConverter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
-            Language.EN, List.of("Feature:"),
-            Language.NO, List.of("Egenskap:", "Funksjonalitet:")
+            Language.EN, List.of("Scenario:", "Scenario outline:"),
+            Language.NO, List.of("Scenario:", "Scenariomal:")
     );
 
-    public static boolean isFeature(final Language language, final String input) {
+    public static boolean isScenario(final Language language, final String input) {
         for (final String possibleValue : possibleValues.get(language)) {
             if (input.trim().startsWith(possibleValue)) {
                 return true;
@@ -26,7 +26,7 @@ public class FeatureConverter {
         String output = input.trim();
 
         for (final String possibleValue : possibleValues.get(language)) {
-            output = output.replace(possibleValue, "#");
+            output = output.replace(possibleValue, "##");
         }
 
         return output;
