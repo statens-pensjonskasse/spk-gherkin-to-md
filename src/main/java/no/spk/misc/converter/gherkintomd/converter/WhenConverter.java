@@ -23,7 +23,7 @@ public class WhenConverter implements Converter {
     }
 
     public String convert(final Language language, final String input) {
-        String output = input;
+        String output = input.trim();
 
         for (final String possibleValue : possibleValues.get(language)) {
             output = output.replace(possibleValue, String.format("**%s** ", possibleValue.trim()));

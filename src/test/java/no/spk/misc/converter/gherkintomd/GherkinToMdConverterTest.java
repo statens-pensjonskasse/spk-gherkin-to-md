@@ -58,7 +58,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("03_EN_given_only.feature")
                 )
         )
-                .isEqualTo("  **Given** that we have something\n");
+                .isEqualTo("**Given** that we have something\n");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("03_NO_given_only.feature")
                 )
         )
-                .isEqualTo("  **Gitt** at vi har noe\n");
+                .isEqualTo("**Gitt** at vi har noe\n");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("04_EN_when_only.feature")
                 )
         )
-                .isEqualTo("  **When** doing something\n");
+                .isEqualTo("**When** doing something\n");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("04_NO_when_only.feature")
                 )
         )
-                .isEqualTo("  **Når** man gjør noe\n");
+                .isEqualTo("**Når** man gjør noe\n");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("05_EN_then_only.feature")
                 )
         )
-                .isEqualTo("  **Then** do something\n");
+                .isEqualTo("**Then** do something\n");
     }
 
     @Test
@@ -108,7 +108,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("05_NO_then_only.feature")
                 )
         )
-                .isEqualTo("  **Så** gjør noe\n");
+                .isEqualTo("**Så** gjør noe\n");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("06_EN_and_only.feature")
                 )
         )
-                .isEqualTo("  **And** also do something else\n");
+                .isEqualTo("**And** also do something else\n");
     }
 
     @Test
@@ -128,7 +128,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("06_NO_and_only.feature")
                 )
         )
-                .isEqualTo("  **Og** også gjør det\n");
+                .isEqualTo("**Og** også gjør det\n");
     }
 
     @Test

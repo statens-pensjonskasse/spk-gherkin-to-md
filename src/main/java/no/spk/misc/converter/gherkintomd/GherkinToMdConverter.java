@@ -20,6 +20,7 @@ import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.NoConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
 import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
+import no.spk.misc.converter.gherkintomd.converter.TrimConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
 
 public class GherkinToMdConverter {
@@ -44,6 +45,8 @@ public class GherkinToMdConverter {
 
     private static final Converter noConverter = new NoConverter();
 
+    private static final Converter trimConverter = new TrimConverter();
+
     public String convert(final String gherkin) {
         requireNonNull(gherkin, "The gherkin string was null, but is required");
 
@@ -65,7 +68,7 @@ public class GherkinToMdConverter {
                                 .stream()
                                 .filter(c -> c.isRelevant(finalLanguage, line))
                                 .findFirst()
-                                .orElse(noConverter)
+                                .orElse(trimConverter)
                                 .convert(language, line))
                         .append("\n");
             }
