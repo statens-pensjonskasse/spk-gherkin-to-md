@@ -52,10 +52,30 @@ public class GherkinToMdConverterTest {
     }
 
     @Test
+    public void shouldConvertGivenToBold_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("03_EN_given_only.feature")
+                )
+        )
+                .isEqualTo("  **Given** that we have something");
+    }
+
+    @Test
+    public void shouldConvertGivenToBold_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("03_NO_given_only.feature")
+                )
+        )
+                .isEqualTo("  **Gitt** at vi har noe");
+    }
+
+    @Test
     public void shouldConvertWhenToBold_EN() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
-                        readTestFeatureFile("03_EN_when_only.feature")
+                        readTestFeatureFile("04_EN_when_only.feature")
                 )
         )
                 .isEqualTo("  **When** doing something");
@@ -65,7 +85,7 @@ public class GherkinToMdConverterTest {
     public void shouldConvertWhenToBold_NO() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
-                        readTestFeatureFile("03_NO_when_only.feature")
+                        readTestFeatureFile("04_NO_when_only.feature")
                 )
         )
                 .isEqualTo("  **Når** man gjør noe");
