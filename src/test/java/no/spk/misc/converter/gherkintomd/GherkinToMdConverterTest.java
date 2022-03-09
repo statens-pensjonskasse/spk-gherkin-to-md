@@ -111,6 +111,26 @@ public class GherkinToMdConverterTest {
                 .isEqualTo("  **Så** gjør noe");
     }
 
+    @Test
+    public void shouldConvertBackgroundToH2_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("06_EN_background_only.feature")
+                )
+        )
+                .isEqualTo("## Background");
+    }
+
+    @Test
+    public void shouldConvertBackgroundToH2_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("06_NO_background_only.feature")
+                )
+        )
+                .isEqualTo("## Bakgrunn");
+    }
+
     private String readTestFeatureFile(final String filename) throws IOException {
         return Files.readString(
                 Path.of(

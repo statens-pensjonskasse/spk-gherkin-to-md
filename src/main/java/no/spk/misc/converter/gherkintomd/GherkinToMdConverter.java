@@ -1,5 +1,6 @@
 package no.spk.misc.converter.gherkintomd;
 
+import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
@@ -31,7 +32,9 @@ public class GherkinToMdConverter {
                 sb.append(WhenConverter.convert(language, line));
             } else if (ThenConverter.isThen(language, line)) {
                 sb.append(ThenConverter.convert(language, line));
-            } else {
+            } else if (BackgroundConverter.isBackground(language, line)) {
+                sb.append(BackgroundConverter.convert(language, line));
+            }  else {
                 sb.append(line);
             }
 
