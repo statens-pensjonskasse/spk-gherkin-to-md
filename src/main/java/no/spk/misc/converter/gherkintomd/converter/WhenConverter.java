@@ -5,14 +5,14 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class WhenConverter {
+public class WhenConverter implements Converter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
             Language.EN, List.of("When "),
             Language.NO, List.of("Når ")
     );
 
-    public static boolean isWhen(final Language language, final String input) {
+    public boolean isRelevant(final Language language, final String input) {
         for (final String possibleValue : possibleValues.get(language)) {
             if (input.trim().startsWith(possibleValue)) {
                 return true;
@@ -22,7 +22,7 @@ public class WhenConverter {
         return false;
     }
 
-    public static String convert(final Language language, final String input) {
+    public String convert(final Language language, final String input) {
         String output = input;
 
         for (final String possibleValue : possibleValues.get(language)) {

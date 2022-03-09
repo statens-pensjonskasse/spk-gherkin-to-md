@@ -1,13 +1,28 @@
 package no.spk.misc.converter.gherkintomd;
 
+import java.util.List;
+
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
+import no.spk.misc.converter.gherkintomd.converter.Converter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
+import no.spk.misc.converter.gherkintomd.converter.NoConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
 import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
 
 public class GherkinToMdConverter {
+
+    private static final List<Converter> converters = List.of(
+            new FeatureConverter(),
+            new ScenarioConverter(),
+            new GivenConverter(),
+            new WhenConverter(),
+            new ThenConverter(),
+            new BackgroundConverter()
+    );
+
+    private static final Converter noConverter = new NoConverter();
 
     public String convert(final String gherkin) {
         final StringBuilder sb = new StringBuilder();
@@ -22,21 +37,15 @@ public class GherkinToMdConverter {
                 continue;
             }
 
-            if (FeatureConverter.isFeature(language, line)) {
-                sb.append(FeatureConverter.convert(language, line));
-            } else if (ScenarioConverter.isScenario(language, line)) {
-                sb.append(ScenarioConverter.convert(language, line));
-            } else if (GivenConverter.isGiven(language, line)) {
-                sb.append(GivenConverter.convert(language, line));
-            } else if (WhenConverter.isWhen(language, line)) {
-                sb.append(WhenConverter.convert(language, line));
-            } else if (ThenConverter.isThen(language, line)) {
-                sb.append(ThenConverter.convert(language, line));
-            } else if (BackgroundConverter.isBackground(language, line)) {
-                sb.append(BackgroundConverter.convert(language, line));
-            }  else {
-                sb.append(line);
-            }
+            final Language finalLanguage = language;
+            sb.append(
+                    converters
+                            .stream()
+                            .filter(c -> c.isRelevant(finalLanguage, line))
+                            .findFirst()
+                            .orElse(noConverter)
+                            .convert(language, line)
+            );
 
             lineNumber++;
         }
