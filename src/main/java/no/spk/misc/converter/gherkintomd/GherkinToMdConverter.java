@@ -61,14 +61,13 @@ public class GherkinToMdConverter {
                 state = ParsingState.BODY;
 
                 final Language finalLanguage = language;
-                sb.append(
-                        converters
+                sb.append(converters
                                 .stream()
                                 .filter(c -> c.isRelevant(finalLanguage, line))
                                 .findFirst()
                                 .orElse(noConverter)
-                                .convert(language, line)
-                );
+                                .convert(language, line))
+                        .append("\n");
             }
         }
 
@@ -91,7 +90,7 @@ public class GherkinToMdConverter {
         final String gherkin = Files.readString(path);
         final String markdown = convert(gherkin);
 
-        try(final PrintWriter writer = new PrintWriter(
+        try (final PrintWriter writer = new PrintWriter(
                 new FileWriter(path.toFile() + ".md", Charset.defaultCharset())
         )) {
             writer.print(markdown);

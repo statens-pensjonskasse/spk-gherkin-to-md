@@ -18,7 +18,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("01_EN_feature_only.feature")
                 )
         )
-                .isEqualTo("# This is a feature");
+                .isEqualTo("# This is a feature\n");
     }
 
     @Test
@@ -28,7 +28,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("01_NO_1_feature_only.feature")
                 )
         )
-                .isEqualTo("# Dette er en feature");
+                .isEqualTo("# Dette er en feature\n");
     }
 
     @Test
@@ -38,7 +38,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("02_EN_scenario_only.feature")
                 )
         )
-                .isEqualTo("## This is a scenario");
+                .isEqualTo("## This is a scenario\n");
     }
 
     @Test
@@ -48,7 +48,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("02_NO_scenario_only.feature")
                 )
         )
-                .isEqualTo("## Dette er en scenariomal");
+                .isEqualTo("## Dette er en scenariomal\n");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("03_EN_given_only.feature")
                 )
         )
-                .isEqualTo("  **Given** that we have something");
+                .isEqualTo("  **Given** that we have something\n");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("03_NO_given_only.feature")
                 )
         )
-                .isEqualTo("  **Gitt** at vi har noe");
+                .isEqualTo("  **Gitt** at vi har noe\n");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("04_EN_when_only.feature")
                 )
         )
-                .isEqualTo("  **When** doing something");
+                .isEqualTo("  **When** doing something\n");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("04_NO_when_only.feature")
                 )
         )
-                .isEqualTo("  **Når** man gjør noe");
+                .isEqualTo("  **Når** man gjør noe\n");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("05_EN_then_only.feature")
                 )
         )
-                .isEqualTo("  **Then** do something");
+                .isEqualTo("  **Then** do something\n");
     }
 
     @Test
@@ -108,7 +108,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("05_NO_then_only.feature")
                 )
         )
-                .isEqualTo("  **Så** gjør noe");
+                .isEqualTo("  **Så** gjør noe\n");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("06_EN_and_only.feature")
                 )
         )
-                .isEqualTo("  **And** also do something else");
+                .isEqualTo("  **And** also do something else\n");
     }
 
     @Test
@@ -128,7 +128,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("06_NO_and_only.feature")
                 )
         )
-                .isEqualTo("  **Og** også gjør det");
+                .isEqualTo("  **Og** også gjør det\n");
     }
 
     @Test
@@ -138,7 +138,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("07_EN_background_only.feature")
                 )
         )
-                .isEqualTo("## Background");
+                .isEqualTo("## Background\n");
     }
 
     @Test
@@ -148,7 +148,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("07_NO_background_only.feature")
                 )
         )
-                .isEqualTo("## Bakgrunn");
+                .isEqualTo("## Bakgrunn\n");
     }
 
     @Test
@@ -158,7 +158,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("08_EN_examples_only.feature")
                 )
         )
-                .isEqualTo("## Here are some examples");
+                .isEqualTo("## Here are some examples\n");
     }
 
     @Test
@@ -168,7 +168,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("08_NO_examples_only.feature")
                 )
         )
-                .isEqualTo("## Her er noen eksempler");
+                .isEqualTo("## Her er noen eksempler\n");
     }
 
     private String readTestFeatureFile(final String filename) throws IOException {
