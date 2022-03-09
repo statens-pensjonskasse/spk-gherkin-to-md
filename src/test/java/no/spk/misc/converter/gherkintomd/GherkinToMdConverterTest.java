@@ -152,23 +152,23 @@ public class GherkinToMdConverterTest {
     }
 
     @Test
-    public void shouldConvertExamplesToH2_EN() throws IOException {
+    public void shouldConvertExamplesToH3_EN() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
                         readTestFeatureFile("08_EN_examples_only.feature")
                 )
         )
-                .isEqualTo("## Examples\n");
+                .isEqualTo("### Examples\n");
     }
 
     @Test
-    public void shouldConvertExamplesToH2_NO() throws IOException {
+    public void shouldConvertExamplesToH3_NO() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
                         readTestFeatureFile("08_NO_examples_only.feature")
                 )
         )
-                .isEqualTo("## Eksempler\n");
+                .isEqualTo("### Eksempler\n");
     }
 
     private String readTestFeatureFile(final String filename) throws IOException {

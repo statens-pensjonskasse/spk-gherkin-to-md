@@ -29,7 +29,7 @@ public class ExamplesConverter implements Converter {
             output = output.replace(
                     possibleValue,
                     String.format(
-                            "## %s",
+                            "### %s",
                             possibleValue.replace(":", ""))
             );
         }
