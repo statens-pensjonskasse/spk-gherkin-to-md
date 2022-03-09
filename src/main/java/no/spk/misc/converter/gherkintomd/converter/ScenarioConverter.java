@@ -5,7 +5,7 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class ScenarioConverter implements Converter {
+public class ScenarioConverter implements SingleLineConverter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
             Language.EN, List.of("Scenario:", "Scenario outline:"),

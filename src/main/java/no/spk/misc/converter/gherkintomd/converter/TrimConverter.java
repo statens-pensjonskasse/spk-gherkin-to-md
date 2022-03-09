@@ -2,7 +2,7 @@ package no.spk.misc.converter.gherkintomd.converter;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class TrimConverter implements Converter {
+public class TrimConverter implements SingleLineConverter {
 
     @Override
     public boolean isRelevant(final Language language, final String input) {

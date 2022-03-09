@@ -13,12 +13,12 @@ import java.util.List;
 
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
-import no.spk.misc.converter.gherkintomd.converter.Converter;
+import no.spk.misc.converter.gherkintomd.converter.SingleLineConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
-import no.spk.misc.converter.gherkintomd.converter.NoConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
+import no.spk.misc.converter.gherkintomd.converter.TableConverter;
 import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.TrimConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
@@ -32,7 +32,7 @@ public class GherkinToMdConverter {
 
     private ParsingState state = ParsingState.HEADER;
 
-    private static final List<Converter> converters = List.of(
+    private static final List<SingleLineConverter> converters = List.of(
             new FeatureConverter(),
             new ScenarioConverter(),
             new ExamplesConverter(),
@@ -43,38 +43,15 @@ public class GherkinToMdConverter {
             new BackgroundConverter()
     );
 
-    private static final Converter noConverter = new NoConverter();
-
-    private static final Converter trimConverter = new TrimConverter();
+    private static final SingleLineConverter trimConverter = new TrimConverter();
 
     public String convert(final String gherkin) {
         requireNonNull(gherkin, "The gherkin string was null, but is required");
 
-        final StringBuilder sb = new StringBuilder();
+        final String markdownWithoutTableChanges = ordinaryPass(gherkin);
+        final String finalMarkdown = tablePass(markdownWithoutTableChanges);
 
-        Language language = Language.EN;
-        boolean wasLanguageFound = false;
-
-        for (final String line : gherkin.split("\n")) {
-            if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
-                language = Language.language(line);
-                wasLanguageFound = true;
-            } else if (state == ParsingState.HEADER && line.trim().startsWith("#")) {
-            } else {
-                state = ParsingState.BODY;
-
-                final Language finalLanguage = language;
-                sb.append(converters
-                                .stream()
-                                .filter(c -> c.isRelevant(finalLanguage, line))
-                                .findFirst()
-                                .orElse(trimConverter)
-                                .convert(language, line))
-                        .append("\n");
-            }
-        }
-
-        return sb.toString();
+        return finalMarkdown;
     }
 
     public void convert(final Path path) throws IOException {
@@ -98,5 +75,40 @@ public class GherkinToMdConverter {
         )) {
             writer.print(markdown);
         }
+    }
+
+    private String ordinaryPass(final String gherkin) {
+        final StringBuilder sb = new StringBuilder();
+
+        Language language = Language.EN;
+        boolean wasLanguageFound = false;
+
+        for (final String line : gherkin.split("\n")) {
+            if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
+                language = Language.language(line);
+                wasLanguageFound = true;
+            } else if (state == ParsingState.HEADER && line.trim().startsWith("#")) {
+            } else {
+                state = ParsingState.BODY;
+
+                final Language finalLanguage = language;
+                sb
+                        .append(
+                                converters
+                                        .stream()
+                                        .filter(converter -> converter.isRelevant(finalLanguage, line))
+                                        .findFirst()
+                                        .orElse(trimConverter)
+                                        .convert(language, line)
+                        )
+                        .append("\n");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private String tablePass(final String gherkinMarkdownMix) {
+        return new TableConverter().convert(gherkinMarkdownMix);
     }
 }

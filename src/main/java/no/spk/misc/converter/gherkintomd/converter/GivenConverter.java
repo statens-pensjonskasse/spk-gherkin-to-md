@@ -5,7 +5,7 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class GivenConverter implements Converter {
+public class GivenConverter implements SingleLineConverter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
             Language.EN, List.of("Given "),

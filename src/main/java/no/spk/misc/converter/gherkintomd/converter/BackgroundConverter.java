@@ -5,7 +5,7 @@ import java.util.Map;
 
 import no.spk.misc.converter.gherkintomd.Language;
 
-public class BackgroundConverter implements Converter {
+public class BackgroundConverter implements SingleLineConverter {
 
     private static final Map<Language, List<String>> possibleValues = Map.of(
             Language.EN, List.of("Background:"),
