@@ -112,10 +112,30 @@ public class GherkinToMdConverterTest {
     }
 
     @Test
+    public void shouldConvertAndToBold_EN() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("06_EN_and_only.feature")
+                )
+        )
+                .isEqualTo("  **And** also do something else");
+    }
+
+    @Test
+    public void shouldConvertAndToBold_NO() throws IOException {
+        assertThat(
+                new GherkinToMdConverter().convert(
+                        readTestFeatureFile("06_NO_and_only.feature")
+                )
+        )
+                .isEqualTo("  **Og** også gjør det");
+    }
+
+    @Test
     public void shouldConvertBackgroundToH2_EN() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
-                        readTestFeatureFile("06_EN_background_only.feature")
+                        readTestFeatureFile("07_EN_background_only.feature")
                 )
         )
                 .isEqualTo("## Background");
@@ -125,7 +145,7 @@ public class GherkinToMdConverterTest {
     public void shouldConvertBackgroundToH2_NO() throws IOException {
         assertThat(
                 new GherkinToMdConverter().convert(
-                        readTestFeatureFile("06_NO_background_only.feature")
+                        readTestFeatureFile("07_NO_background_only.feature")
                 )
         )
                 .isEqualTo("## Bakgrunn");

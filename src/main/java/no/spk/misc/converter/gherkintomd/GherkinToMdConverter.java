@@ -2,6 +2,7 @@ package no.spk.misc.converter.gherkintomd;
 
 import java.util.List;
 
+import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.Converter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
@@ -19,6 +20,7 @@ public class GherkinToMdConverter {
             new GivenConverter(),
             new WhenConverter(),
             new ThenConverter(),
+            new AndConverter(),
             new BackgroundConverter()
     );
 
