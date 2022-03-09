@@ -26,7 +26,12 @@ public class ExamplesConverter implements Converter {
         String output = input.trim();
 
         for (final String possibleValue : possibleValues.get(language)) {
-            output = output.replace(possibleValue, "##");
+            output = output.replace(
+                    possibleValue,
+                    String.format(
+                            "## %s",
+                            possibleValue.replace(":", ""))
+            );
         }
 
         return output;

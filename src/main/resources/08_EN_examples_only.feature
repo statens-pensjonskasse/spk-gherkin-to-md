@@ -1,1 +1,1 @@
-  Examples: Here are some examples
+  Examples:

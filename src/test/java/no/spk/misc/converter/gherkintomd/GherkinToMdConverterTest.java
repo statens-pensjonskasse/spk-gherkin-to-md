@@ -158,7 +158,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("08_EN_examples_only.feature")
                 )
         )
-                .isEqualTo("## Here are some examples\n");
+                .isEqualTo("## Examples\n");
     }
 
     @Test
@@ -168,7 +168,7 @@ public class GherkinToMdConverterTest {
                         readTestFeatureFile("08_NO_examples_only.feature")
                 )
         )
-                .isEqualTo("## Her er noen eksempler\n");
+                .isEqualTo("## Eksempler\n");
     }
 
     private String readTestFeatureFile(final String filename) throws IOException {
