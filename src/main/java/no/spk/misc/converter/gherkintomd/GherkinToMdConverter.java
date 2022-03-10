@@ -1,8 +1,8 @@
 package no.spk.misc.converter.gherkintomd;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,11 +13,11 @@ import java.util.List;
 
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
-import no.spk.misc.converter.gherkintomd.converter.SingleLineConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
+import no.spk.misc.converter.gherkintomd.converter.SingleLineConverter;
 import no.spk.misc.converter.gherkintomd.converter.TableConverter;
 import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.TrimConverter;
@@ -60,8 +60,12 @@ public class GherkinToMdConverter {
         if (path.toFile().isFile()) {
             convertSingleFile(path);
         } else {
-            for (final File subFile : requireNonNull(path.toFile().listFiles())) {
-                convert(subFile.toPath());
+            final List<Path> filesInFolder = Files.list(path)
+                    .filter(f -> f.toFile().isDirectory() || f.toFile().getName().endsWith(".feature"))
+                    .collect(toList());
+
+            for (final Path subFile : filesInFolder) {
+                convert(subFile);
             }
         }
     }
