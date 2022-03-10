@@ -9,3 +9,4 @@ build.sbt
 dependency-reduced-pom.xml
 .attach*
 .surefire-*
+testfolder/
