@@ -16,12 +16,15 @@ public class TableConverter {
     public String convert(final String input) {
         final StringBuilder sb = new StringBuilder();
 
+        boolean previousLineWasEmpty = true;
+
         for (final String line : input.split("\n")) {
             if (line.trim().startsWith("|")) {
                 if (state == TableParsingState.OUTSIDE_TABLE) {
                     state = TableParsingState.IN_TABLE_HEADER;
 
                     sb
+                            .append(previousLineWasEmpty ? "" : "\n")
                             .append(line)
                             .append("\n");
                 } else if (state == TableParsingState.IN_TABLE_HEADER) {
@@ -48,6 +51,8 @@ public class TableConverter {
                         .append(line)
                         .append("\n");
             }
+
+            previousLineWasEmpty = line.isEmpty();
         }
 
         return sb.toString();
