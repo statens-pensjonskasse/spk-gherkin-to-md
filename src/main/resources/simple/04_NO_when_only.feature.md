@@ -1,0 +1,1 @@
+**Når** man gjør noe
