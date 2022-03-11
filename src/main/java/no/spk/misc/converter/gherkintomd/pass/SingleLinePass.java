@@ -15,6 +15,7 @@ import no.spk.misc.converter.gherkintomd.converter.SingleLineConverter;
 import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.TrimConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
+import no.spk.misc.converter.gherkintomd.util.StringUtil;
 
 /**
  * Does a pass over the Gherkin content and performs the conversions to Markdown that can be done
@@ -64,6 +65,7 @@ public class SingleLinePass implements Pass {
 
         Language language = Language.EN;
         boolean wasLanguageFound = false;
+        int indentationOfDocstring = 0;
 
         for (final String line : input.split("\n")) {
             final boolean isEncounteringCodeblockDelimiter = line.trim().startsWith(DOCSTRING_DELIMITER) || line.trim().startsWith(BACKTICS);
@@ -72,10 +74,17 @@ public class SingleLinePass implements Pass {
                 case IN_DOCSTRING:
                     if (isEncounteringCodeblockDelimiter) {
                         docstringParsingState = DocstringParsingState.OUTSIDE_DOCSTRING;
+                        sb
+                                .append(trimConverter.convert(language, line))
+                                .append("\n");
+                    } else {
+                        final int indentationOfLine = StringUtil.findIndentation(line);
+                        final int indentationToBeUsed = indentationOfLine - indentationOfDocstring;
+                        sb
+                                .append(StringUtil.createIndentation(indentationToBeUsed))
+                                .append(trimConverter.convert(language, line))
+                                .append("\n");
                     }
-                    sb
-                            .append(trimConverter.convert(language, line))
-                            .append("\n");
                     break;
                 case OUTSIDE_DOCSTRING:
                     if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
@@ -88,6 +97,7 @@ public class SingleLinePass implements Pass {
 
                         if (isEncounteringCodeblockDelimiter) {
                             docstringParsingState = DocstringParsingState.IN_DOCSTRING;
+                            indentationOfDocstring = StringUtil.findIndentation(line);
 
                             sb
                                     .append(trimConverter.convert(language, line))
