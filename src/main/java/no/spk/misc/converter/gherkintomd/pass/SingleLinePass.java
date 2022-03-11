@@ -5,6 +5,7 @@ import java.util.List;
 import no.spk.misc.converter.gherkintomd.Language;
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
+import no.spk.misc.converter.gherkintomd.converter.ButConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
@@ -14,7 +15,11 @@ import no.spk.misc.converter.gherkintomd.converter.ThenConverter;
 import no.spk.misc.converter.gherkintomd.converter.TrimConverter;
 import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
 
-public class OrdinaryPass implements Pass {
+/**
+ * Does a pass over the Gherkin content and performs the conversions to Markdown that can be done
+ * by only looking at a single line. I.e. the easy conversions from Gherkin to Markdown.
+ */
+public class SingleLinePass implements Pass {
 
     private static final List<SingleLineConverter> converters = List.of(
             new FeatureConverter(),
@@ -24,6 +29,7 @@ public class OrdinaryPass implements Pass {
             new WhenConverter(),
             new ThenConverter(),
             new AndConverter(),
+            new ButConverter(),
             new BackgroundConverter()
     );
 

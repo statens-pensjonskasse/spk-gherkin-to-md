@@ -10,17 +10,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-import no.spk.misc.converter.gherkintomd.pass.OrdinaryPass;
+import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.pass.Pass;
 import no.spk.misc.converter.gherkintomd.pass.TablePass;
 
 public class GherkinToMdConverter {
 
     private static final List<Supplier<Pass>> passes = List.of(
-            OrdinaryPass::new,
+            SingleLinePass::new,
             TablePass::new
     );
 
