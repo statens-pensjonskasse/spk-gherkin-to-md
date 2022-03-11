@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
 
+import no.spk.misc.converter.gherkintomd.pass.DocstringPass;
 import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.pass.Pass;
 import no.spk.misc.converter.gherkintomd.pass.TablePass;
@@ -19,6 +20,7 @@ import no.spk.misc.converter.gherkintomd.pass.TablePass;
 public class GherkinToMdConverter {
 
     private static final List<Supplier<Pass>> passes = List.of(
+            DocstringPass::new,
             SingleLinePass::new,
             TablePass::new
     );
