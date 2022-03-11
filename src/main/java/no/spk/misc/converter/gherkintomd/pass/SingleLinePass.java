@@ -6,6 +6,7 @@ import no.spk.misc.converter.gherkintomd.Language;
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.ButConverter;
+import no.spk.misc.converter.gherkintomd.converter.DocstringConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
@@ -18,8 +19,18 @@ import no.spk.misc.converter.gherkintomd.converter.WhenConverter;
 /**
  * Does a pass over the Gherkin content and performs the conversions to Markdown that can be done
  * by only looking at a single line. I.e. the easy conversions from Gherkin to Markdown.
+ * <br>
+ * Docstrings and code blocks should not have their content converted to Markdown.
  */
 public class SingleLinePass implements Pass {
+
+    private static final String DOCSTRING_DELIMITER = "\"\"\"";
+    private static final String BACKTICS = "```";
+
+    private enum DocstringParsingState {
+        IN_DOCSTRING,
+        OUTSIDE_DOCSTRING
+    }
 
     private static final List<SingleLineConverter> converters = List.of(
             new FeatureConverter(),
@@ -42,6 +53,8 @@ public class SingleLinePass implements Pass {
 
     private ParsingState state = ParsingState.HEADER;
 
+    private DocstringParsingState docstringParsingState = DocstringParsingState.OUTSIDE_DOCSTRING;
+
     public String name() {
         return "ordinary pass";
     }
@@ -53,24 +66,49 @@ public class SingleLinePass implements Pass {
         boolean wasLanguageFound = false;
 
         for (final String line : input.split("\n")) {
-            if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
-                language = Language.language(line);
-                wasLanguageFound = true;
-            } else if (state == ParsingState.HEADER && line.trim().startsWith("#")) {
-            } else {
-                state = ParsingState.BODY;
+            final boolean isEncounteringCodeblockDelimiter = line.trim().startsWith(DOCSTRING_DELIMITER) || line.trim().startsWith(BACKTICS);
 
-                final Language finalLanguage = language;
-                sb
-                        .append(
-                                converters
-                                        .stream()
-                                        .filter(converter -> converter.isRelevant(finalLanguage, line))
-                                        .findFirst()
-                                        .orElse(trimConverter)
-                                        .convert(language, line)
-                        )
-                        .append("\n");
+            switch (docstringParsingState) {
+                case IN_DOCSTRING:
+                    if (isEncounteringCodeblockDelimiter) {
+                        docstringParsingState = DocstringParsingState.OUTSIDE_DOCSTRING;
+                    }
+                    sb
+                            .append(trimConverter.convert(language, line))
+                            .append("\n");
+                    break;
+                case OUTSIDE_DOCSTRING:
+                    if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
+                        language = Language.language(line);
+                        wasLanguageFound = true;
+                    } else if (state == ParsingState.HEADER && line.trim().startsWith("#")) {
+                        // Skipping other preprocessing directives, such as encoding.
+                    } else {
+                        state = ParsingState.BODY;
+
+                        if (isEncounteringCodeblockDelimiter) {
+                            docstringParsingState = DocstringParsingState.IN_DOCSTRING;
+
+                            sb
+                                    .append(trimConverter.convert(language, line))
+                                    .append("\n");
+                        } else {
+                            final Language finalLanguage = language;
+                            sb
+                                    .append(
+                                            converters
+                                                    .stream()
+                                                    .filter(converter -> converter.isRelevant(finalLanguage, line))
+                                                    .findFirst()
+                                                    .orElse(trimConverter)
+                                                    .convert(language, line)
+                                    )
+                                    .append("\n");
+                        }
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled docstring parsing state: " + docstringParsingState);
             }
         }
 

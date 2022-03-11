@@ -47,7 +47,7 @@ public class DocstringConverter {
                     }
                     break;
                 default:
-                    break;
+                    throw new IllegalStateException("Unhandled docstring parsing state: " + state);
             }
 
             previousLineWasEmpty = line.isEmpty();

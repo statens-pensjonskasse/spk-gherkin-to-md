@@ -2,6 +2,9 @@ package no.spk.misc.converter.gherkintomd.pass;
 
 import no.spk.misc.converter.gherkintomd.converter.DocstringConverter;
 
+/**
+ * Does a pass over the Gherkin content and converts Gherkin docstrings to Markdown code blocks.
+ */
 public class DocstringPass implements Pass {
 
     @Override
