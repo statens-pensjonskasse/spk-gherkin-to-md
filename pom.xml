@@ -4,19 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>no.spk</groupId>
-        <artifactId>spk-root-pom</artifactId>
-        <version>125</version>
-    </parent>
-
     <groupId>no.spk.misc.converter</groupId>
     <artifactId>spk-gherkin-to-md</artifactId>
     <name>spk-gherkin-to-md</name>
     <version>0.0.1-SNAPSHOT</version>
 
     <description>
-        Convert gherkin (feature) files to markdown (md).
+        Convert Gherkin (feature) files to Markdown (md).
     </description>
 
     <properties>
@@ -26,6 +20,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <picocli.version>4.6.3</picocli.version>
+        <jgitflow-plugin.version>1.0-m5.1</jgitflow-plugin.version>
+        <git-commit-id-plugin.version>2.2.6</git-commit-id-plugin.version>
 
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.22.0</assertj.version>
@@ -40,6 +36,10 @@
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <maven-site-plugin.version>3.11.0</maven-site-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 
     <build>
@@ -87,32 +87,23 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <quiet>true</quiet>
-                        <source>1.8</source>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>${maven-resources-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.1</version>
+                    <version>${maven-shade-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>${maven-site-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>${maven-source-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -123,7 +114,7 @@
                 <plugin>
                     <groupId>external.atlassian.jgitflow</groupId>
                     <artifactId>jgitflow-maven-plugin</artifactId>
-                    <version>1.0-m5.1</version>
+                    <version>${jgitflow-plugin.version}</version>
                     <configuration>
                         <!-- see goals wiki page for configuration options -->
                         <noDeploy>true</noDeploy>
@@ -135,7 +126,7 @@
                 <plugin>
                     <groupId>pl.project13.maven</groupId>
                     <artifactId>git-commit-id-plugin</artifactId>
-                    <version>2.2.6</version>
+                    <version>${git-commit-id-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -220,18 +211,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <!-- workaround for https://issues.apache.org/jira/browse/MDEP-753. Removed when 3.2.1 is available. -->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.shared</groupId>
+                        <artifactId>maven-dependency-analyzer</artifactId>
+                        <version>1.11.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>9.2</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>analyze</id>
                         <goals>
                             <goal>analyze-only</goal>
                         </goals>
-                        <phase>verify</phase>
+                        <phase>test</phase>
                     </execution>
                 </executions>
                 <configuration>
                     <failOnWarning>true</failOnWarning>
-                    <ignoreNonCompile>true</ignoreNonCompile>
+                    <ignoredUnusedDeclaredDependencies>*</ignoredUnusedDeclaredDependencies>
                 </configuration>
             </plugin>
             <plugin>
