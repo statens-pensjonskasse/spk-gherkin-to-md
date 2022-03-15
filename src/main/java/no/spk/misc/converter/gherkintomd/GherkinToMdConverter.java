@@ -6,24 +6,36 @@ import static java.util.stream.Collectors.toList;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 import no.spk.misc.converter.gherkintomd.pass.DocstringPass;
-import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.pass.Pass;
+import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.pass.TablePass;
 
 public class GherkinToMdConverter {
 
-    private static final List<Supplier<Pass>> passes = List.of(
-            DocstringPass::new,
-            SingleLinePass::new,
-            TablePass::new
-    );
+    private final List<Supplier<Pass>> passes = new ArrayList<>();
+
+    public GherkinToMdConverter() throws MalformedURLException {
+        passes.addAll(
+                Plugins.getPlugins()
+        );
+
+        passes.addAll(
+                List.of(
+                        DocstringPass::new,
+                        SingleLinePass::new,
+                        TablePass::new
+                )
+        );
+    }
 
     public String convert(final String gherkin) {
         requireNonNull(gherkin, "The gherkin string is required, but was null");
