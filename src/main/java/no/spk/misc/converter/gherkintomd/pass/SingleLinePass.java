@@ -1,13 +1,15 @@
 package no.spk.misc.converter.gherkintomd.pass;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 
 import no.spk.misc.converter.gherkintomd.Language;
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.ButConverter;
-import no.spk.misc.converter.gherkintomd.converter.DocstringConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
+import no.spk.misc.converter.gherkintomd.converter.ExamplesParameterConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
 import no.spk.misc.converter.gherkintomd.converter.GivenConverter;
 import no.spk.misc.converter.gherkintomd.converter.ScenarioConverter;
@@ -37,6 +39,7 @@ public class SingleLinePass implements Pass {
             new FeatureConverter(),
             new ScenarioConverter(),
             new ExamplesConverter(),
+            new ExamplesParameterConverter(),
             new GivenConverter(),
             new WhenConverter(),
             new ThenConverter(),
@@ -104,16 +107,24 @@ public class SingleLinePass implements Pass {
                                     .append("\n");
                         } else {
                             final Language finalLanguage = language;
-                            sb
-                                    .append(
-                                            converters
-                                                    .stream()
-                                                    .filter(converter -> converter.isRelevant(finalLanguage, line))
-                                                    .findFirst()
-                                                    .orElse(trimConverter)
-                                                    .convert(language, line)
-                                    )
-                                    .append("\n");
+                            final List<SingleLineConverter> chosenConverters = converters
+                                    .stream()
+                                    .filter(converter -> converter.isRelevant(finalLanguage, line))
+                                    .collect(toList());
+
+                            if (chosenConverters.isEmpty()) {
+                                sb
+                                        .append(trimConverter.convert(finalLanguage, line))
+                                        .append("\n");
+                            } else {
+                                String converted = line;
+                                for (final SingleLineConverter c : chosenConverters) {
+                                    converted = c.convert(language, converted);
+                                }
+                                sb
+                                        .append(converted)
+                                        .append("\n");
+                            }
                         }
                     }
                     break;
