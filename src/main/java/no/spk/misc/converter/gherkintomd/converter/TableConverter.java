@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.spk.misc.converter.gherkintomd.Language;
-import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.util.StringUtil;
 
 public class TableConverter {

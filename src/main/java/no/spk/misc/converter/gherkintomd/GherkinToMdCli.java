@@ -11,7 +11,7 @@ import picocli.CommandLine.Parameters;
 @Command(name = "spk-gherkin-to-md",
         mixinStandardHelpOptions = true,
         description = "Convert gherkin (feature) files to markdown (md)",
-        version = "spk-gherkin-to-md 0.0.1"
+        version = "spk-gherkin-to-md 0.0.3"
 )
 public class GherkinToMdCli implements Callable<Integer> {
 
