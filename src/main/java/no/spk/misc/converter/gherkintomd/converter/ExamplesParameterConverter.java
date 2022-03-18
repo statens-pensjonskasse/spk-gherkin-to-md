@@ -6,7 +6,7 @@ import no.spk.misc.converter.gherkintomd.Language;
 
 public class ExamplesParameterConverter implements SingleLineConverter {
 
-    private static final Pattern PARAMETER_PATTERN = Pattern.compile("(<[a-zæøåA-ZÆØÅ0-9]*>)");
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("(<[a-zæøåA-ZÆØÅ0-9 ]*>)");
 
     @Override
     public boolean isRelevant(final Language language, final String input) {
