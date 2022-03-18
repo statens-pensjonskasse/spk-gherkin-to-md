@@ -1,1 +1,1 @@
-| `<parameter1>` | `<parameter2>` | not a parameter |
+| `<parameter1>` | `<parameter 2>` | not a parameter |
