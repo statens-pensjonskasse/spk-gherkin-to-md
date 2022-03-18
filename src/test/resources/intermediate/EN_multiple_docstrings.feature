@@ -9,8 +9,10 @@ Feature: Should act in a particular way
     """
 
     """
-        This is also a docstring
+        # This is also a docstring
     """
+
+    # This is a comment that should be removed.
 
     """
         | Header 1 | Header 2 | Header 3 |

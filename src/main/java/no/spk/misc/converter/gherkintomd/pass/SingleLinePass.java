@@ -8,6 +8,7 @@ import no.spk.misc.converter.gherkintomd.Language;
 import no.spk.misc.converter.gherkintomd.converter.AndConverter;
 import no.spk.misc.converter.gherkintomd.converter.BackgroundConverter;
 import no.spk.misc.converter.gherkintomd.converter.ButConverter;
+import no.spk.misc.converter.gherkintomd.converter.CommentConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesConverter;
 import no.spk.misc.converter.gherkintomd.converter.ExamplesParameterConverter;
 import no.spk.misc.converter.gherkintomd.converter.FeatureConverter;
@@ -29,6 +30,8 @@ public class SingleLinePass implements Pass {
 
     private static final String DOCSTRING_DELIMITER = "\"\"\"";
     private static final String BACKTICS = "```";
+    private static final String PREPROCESSOR_CHARACTER = "#";
+    private static final String COMMENT_CHARACTER = "#";
 
     private enum DocstringParsingState {
         IN_DOCSTRING,
@@ -72,6 +75,7 @@ public class SingleLinePass implements Pass {
 
         for (final String line : input.split("\n")) {
             final boolean isEncounteringCodeblockDelimiter = line.trim().startsWith(DOCSTRING_DELIMITER) || line.trim().startsWith(BACKTICS);
+            final boolean isEncounteringComment = line.trim().startsWith(COMMENT_CHARACTER);
 
             switch (docstringParsingState) {
                 case IN_DOCSTRING:
@@ -93,8 +97,9 @@ public class SingleLinePass implements Pass {
                     if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
                         language = Language.language(line);
                         wasLanguageFound = true;
-                    } else if (state == ParsingState.HEADER && line.trim().startsWith("#")) {
+                    } else if (state == ParsingState.HEADER && line.trim().startsWith(PREPROCESSOR_CHARACTER)) {
                         // Skipping other preprocessing directives, such as encoding.
+                        continue;
                     } else {
                         state = ParsingState.BODY;
 
@@ -105,6 +110,8 @@ public class SingleLinePass implements Pass {
                             sb
                                     .append(trimConverter.convert(language, line))
                                     .append("\n");
+                        } else if (isEncounteringComment) {
+                            continue;
                         } else {
                             final Language finalLanguage = language;
                             final List<SingleLineConverter> chosenConverters = converters
