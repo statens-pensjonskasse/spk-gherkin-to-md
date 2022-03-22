@@ -18,6 +18,7 @@ import no.spk.misc.converter.gherkintomd.pass.DocstringPass;
 import no.spk.misc.converter.gherkintomd.pass.Pass;
 import no.spk.misc.converter.gherkintomd.pass.SingleLinePass;
 import no.spk.misc.converter.gherkintomd.pass.TablePass;
+import no.spk.misc.converter.gherkintomd.pass.UsedTagsPass;
 
 public class GherkinToMdConverter {
 
@@ -32,7 +33,8 @@ public class GherkinToMdConverter {
                 List.of(
                         DocstringPass::new,
                         SingleLinePass::new,
-                        TablePass::new
+                        TablePass::new,
+                        UsedTagsPass::new
                 )
         );
     }
