@@ -12,7 +12,7 @@ import no.spk.misc.converter.gherkintomd.lib.converter.UsedTagConverter;
  *
  * Example:
  *
- * @ignore
+ * (AT)ignore
  * Scenario: This is a scenario
  *
  *
