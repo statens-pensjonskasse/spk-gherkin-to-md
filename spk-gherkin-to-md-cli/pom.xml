@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>GherkinToMdCli</mainClass>
+                            <mainClass>no.spk.misc.converter.gherkintomd.cli.GherkinToMdCli</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
