@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
 
     <groupId>no.spk.misc.converter</groupId>
     <artifactId>spk-gherkin-to-md</artifactId>
@@ -10,6 +11,10 @@
     <description>
         Convert Gherkin (feature) files to Markdown (md).
     </description>
+    <modules>
+        <module>spk-gherkin-to-md-cli</module>
+        <module>spk-gherkin-to-md-lib</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -143,7 +148,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>no.spk.misc.converter.gherkintomd.GherkinToMdCli</mainClass>
+                            <mainClass>GherkinToMdCli</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -263,21 +268,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-    </dependencies>
 
     <dependencyManagement>
         <dependencies>
