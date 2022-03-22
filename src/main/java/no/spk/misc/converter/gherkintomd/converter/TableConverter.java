@@ -13,13 +13,13 @@ public class TableConverter {
 
     private enum DocstringParsingState {
         IN_DOCSTRING,
-        OUTSIDE_DOCSTRING
+        OUTSIDE_DOCSTRING,
     }
 
     private enum TableParsingState {
         IN_TABLE_HEADER,
         IN_TABLE,
-        OUTSIDE_TABLE
+        OUTSIDE_TABLE,
     }
 
     private static final SingleLineConverter trimConverter = new TrimConverter();
@@ -29,10 +29,11 @@ public class TableConverter {
     private DocstringParsingState docstringParsingState = DocstringParsingState.OUTSIDE_DOCSTRING;
 
     public String convert(final String input) {
-        final StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
         boolean previousLineWasEmpty = true;
         int indentationOfDocstring = 0;
+        int columns = 0;
 
         for (final String line : input.split("\n")) {
             final boolean isEncounteringCodeblockDelimiter = line.trim().startsWith(DOCSTRING_DELIMITER) || line.trim().startsWith(BACKTICS);
@@ -57,6 +58,7 @@ public class TableConverter {
                     if (line.trim().startsWith("|")) {
                         if (state == TableParsingState.OUTSIDE_TABLE) {
                             state = TableParsingState.IN_TABLE_HEADER;
+                            columns = numberOfColumns(line);
 
                             sb
                                     .append(previousLineWasEmpty ? "" : "\n")
@@ -66,11 +68,7 @@ public class TableConverter {
                             state = TableParsingState.IN_TABLE;
 
                             sb
-                                    .append(
-                                            createHeader(
-                                                    numberOfColumns(line)
-                                            )
-                                    )
+                                    .append(createHeader(columns))
                                     .append("\n")
                                     .append(line)
                                     .append("\n");
@@ -87,11 +85,19 @@ public class TableConverter {
                                 .append(line)
                                 .append("\n");
                     } else {
-                        state = TableParsingState.OUTSIDE_TABLE;
+                        if (state == TableParsingState.IN_TABLE_HEADER) {
+                            sb
+                                    .append(createHeader(columns))
+                                    .append("\n")
+                                    .append(line)
+                                    .append("\n");
+                        } else {
+                            sb
+                                    .append(line)
+                                    .append("\n");
+                        }
 
-                        sb
-                                .append(line)
-                                .append("\n");
+                        state = TableParsingState.OUTSIDE_TABLE;
                     }
                     break;
                 default:
@@ -100,6 +106,8 @@ public class TableConverter {
 
             previousLineWasEmpty = line.isEmpty();
         }
+
+        sb = addHeaderIfEndingRightAfterTableHeader(sb, input);
 
         return sb.toString();
     }
@@ -115,5 +123,22 @@ public class TableConverter {
         }
 
         return String.join("-", bars);
+    }
+
+    private StringBuilder addHeaderIfEndingRightAfterTableHeader(final StringBuilder original, final String input) {
+        final StringBuilder newSb = new StringBuilder(original);
+
+        if (state == TableParsingState.IN_TABLE_HEADER) {
+            final String[] lines = input.split("\n");
+            newSb
+                    .append(
+                            createHeader(
+                                    numberOfColumns(lines[lines.length - 1])
+                            )
+                    )
+                    .append("\n");
+        }
+
+        return newSb;
     }
 }
