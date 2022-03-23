@@ -6,7 +6,7 @@
     <groupId>no.spk.misc.converter</groupId>
     <artifactId>spk-gherkin-to-md</artifactId>
     <name>spk-gherkin-to-md</name>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.7</version>
 
     <description>
         Convert Gherkin (feature) files to Markdown (md).
