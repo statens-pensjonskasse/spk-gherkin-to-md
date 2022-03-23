@@ -24,15 +24,28 @@ public class BackgroundConverter implements SingleLineConverter {
 
     public String convert(final Language language, final String input) {
         String output = input.trim();
+        final String[] split = output.split(":");
+        final boolean hasExtraInformationAfterColon = split.length > 1 && split[1].length() > 0;
 
         for (final String possibleValue : possibleValues.get(language)) {
-            output = output.replace(
-                    possibleValue,
-                    String.format(
-                            "## %s",
-                            possibleValue.replace(":", "")
-                    )
-            );
+
+            if (hasExtraInformationAfterColon) {
+                output = output.replaceFirst(
+                        possibleValue,
+                        String.format(
+                                "## %s",
+                                possibleValue
+                        )
+                );
+            } else {
+                output = output.replaceFirst(
+                        possibleValue,
+                        String.format(
+                                "## %s",
+                                possibleValue.replace(":", "")
+                        )
+                );
+            }
         }
 
         return output;
