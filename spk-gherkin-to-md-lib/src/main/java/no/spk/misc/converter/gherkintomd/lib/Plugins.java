@@ -10,15 +10,24 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
-import no.spk.misc.converter.gherkintomd.lib.pass.Pass;
+import no.spk.misc.converter.gherkintomd.lib.pass.AfterPass;
+import no.spk.misc.converter.gherkintomd.lib.pass.BeforePass;
 
 public class Plugins {
 
-    public static List<Supplier<Pass>> getPlugins() throws MalformedURLException {
+    public static List<Supplier<BeforePass>> getBeforePlugins() throws MalformedURLException {
         return ServiceLoader
-                .load(Pass.class, makePluginsClassloader())
+                .load(BeforePass.class, makePluginsClassloader())
                 .stream()
-                .map(p -> (Supplier<Pass>) p)
+                .map(p -> (Supplier<BeforePass>) p)
+                .collect(toList());
+    }
+
+    public static List<Supplier<AfterPass>> getAfterPlugins() throws MalformedURLException {
+        return ServiceLoader
+                .load(AfterPass.class, makePluginsClassloader())
+                .stream()
+                .map(p -> (Supplier<AfterPass>) p)
                 .collect(toList());
     }
 
