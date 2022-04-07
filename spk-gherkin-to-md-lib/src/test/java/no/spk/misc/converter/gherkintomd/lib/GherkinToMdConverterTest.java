@@ -18,8 +18,8 @@ import org.junit.Test;
 public class GherkinToMdConverterTest {
 
     @Test
-    public void shouldConvertAllFilesSimpleFolderCorrectly() throws IOException, URISyntaxException {
-        final List<String> featureFiles = allFeaturesInResourceFolder("/simple");
+    public void shouldPerformAnAdhocTest() throws IOException, URISyntaxException {
+        final List<String> featureFiles = allFeaturesInResourceFolder("/adhoc");
 
         featureFiles.forEach(
                 featureFile ->
@@ -27,12 +27,12 @@ public class GherkinToMdConverterTest {
                     try {
                         assertThat(
                                 new GherkinToMdConverter().convert(
-                                        readResourceFile("simple/" + featureFile)
+                                        readResourceFile("adhoc/" + featureFile)
                                 )
                         )
-                                .as(String.format("Simple folder: assertion failed in pair: %s - %s", featureFile, featureFile + ".md"))
+                                .as(String.format("Adhoc folder: assertion failed in pair: %s - %s", featureFile, featureFile + ".md"))
                                 .isEqualTo(
-                                        readResourceFile("simple/" + featureFile + ".md")
+                                        readResourceFile("adhoc/" + featureFile + ".md")
                                 );
                     } catch (final IOException e) {
                         throw new UncheckedIOException(e);
@@ -57,6 +57,30 @@ public class GherkinToMdConverterTest {
                                 .as(String.format("Intermediate folder: assertion failed in pair: %s - %s", featureFile, featureFile + ".md"))
                                 .isEqualTo(
                                         readResourceFile("intermediate/" + featureFile + ".md")
+                                );
+                    } catch (final IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+        );
+    }
+
+    @Test
+    public void shouldConvertAllFilesSimpleFolderCorrectly() throws IOException, URISyntaxException {
+        final List<String> featureFiles = allFeaturesInResourceFolder("/simple");
+
+        featureFiles.forEach(
+                featureFile ->
+                {
+                    try {
+                        assertThat(
+                                new GherkinToMdConverter().convert(
+                                        readResourceFile("simple/" + featureFile)
+                                )
+                        )
+                                .as(String.format("Simple folder: assertion failed in pair: %s - %s", featureFile, featureFile + ".md"))
+                                .isEqualTo(
+                                        readResourceFile("simple/" + featureFile + ".md")
                                 );
                     } catch (final IOException e) {
                         throw new UncheckedIOException(e);
