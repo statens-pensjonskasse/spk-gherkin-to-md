@@ -62,7 +62,7 @@ public class TableConverter {
 
                             sb
                                     .append(previousLineWasEmpty ? "" : "\n")
-                                    .append(line)
+                                    .append(line.trim())
                                     .append("\n");
                         } else if (state == TableParsingState.IN_TABLE_HEADER) {
                             state = TableParsingState.IN_TABLE;
@@ -70,7 +70,7 @@ public class TableConverter {
                             sb
                                     .append(createHeader(columns))
                                     .append("\n")
-                                    .append(line)
+                                    .append(line.trim())
                                     .append("\n");
                         } else {
                             sb
