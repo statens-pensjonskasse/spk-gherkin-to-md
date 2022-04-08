@@ -24,10 +24,14 @@ import no.spk.misc.converter.gherkintomd.lib.converter.ButConverter;
  * by only looking at a single line. I.e. the easy conversions from Gherkin to Markdown.
  * <br>
  * Docstrings and code blocks should not have their content converted to Markdown.
+ * <br>
+ * Frontmatter blocks might exist in the input (typically from previous passes), and these have
+ * to be ignored.
  */
 public class SingleLinePass implements Pass {
 
     private static final String DOCSTRING_DELIMITER = "\"\"\"";
+    private static final String FRONTMATTER_DELIMITER = "---";
     private static final String BACKTICS = "```";
     private static final String PREPROCESSOR_CHARACTER = "#";
     private static final String COMMENT_CHARACTER = "#";
@@ -36,6 +40,18 @@ public class SingleLinePass implements Pass {
         IN_DOCSTRING,
         OUTSIDE_DOCSTRING
     }
+
+    private enum FrontmatterParsingState {
+        IN_FRONTMATTER,
+        OUTSIDE_FRONTMATTER
+    }
+
+    private enum ParsingState {
+        HEADER,
+        BODY
+    }
+
+    private static final SingleLineConverter trimConverter = new TrimConverter();
 
     private static final List<SingleLineConverter> converters = List.of(
             new FeatureConverter(),
@@ -50,16 +66,11 @@ public class SingleLinePass implements Pass {
             new BackgroundConverter()
     );
 
-    private static final SingleLineConverter trimConverter = new TrimConverter();
-
-    private enum ParsingState {
-        HEADER,
-        BODY
-    }
-
     private ParsingState state = ParsingState.HEADER;
 
     private DocstringParsingState docstringParsingState = DocstringParsingState.OUTSIDE_DOCSTRING;
+
+    private FrontmatterParsingState frontmatterParsingState = FrontmatterParsingState.OUTSIDE_FRONTMATTER;
 
     public String name() {
         return "ordinary pass";
@@ -74,6 +85,7 @@ public class SingleLinePass implements Pass {
 
         for (final String line : input.split("\n")) {
             final boolean isEncounteringCodeblockDelimiter = line.trim().startsWith(DOCSTRING_DELIMITER) || line.trim().startsWith(BACKTICS);
+            final boolean isEncounteringFrontmatterDelimiter = line.trim().startsWith(FRONTMATTER_DELIMITER);
             final boolean isEncounteringComment = line.trim().startsWith(COMMENT_CHARACTER);
 
             switch (docstringParsingState) {
@@ -93,45 +105,65 @@ public class SingleLinePass implements Pass {
                     }
                     break;
                 case OUTSIDE_DOCSTRING:
-                    if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
-                        language = Language.language(line);
-                        wasLanguageFound = true;
-                    } else if (state == ParsingState.HEADER && line.trim().startsWith(PREPROCESSOR_CHARACTER)) {
-                        // Skipping other preprocessing directives, such as encoding.
-                        continue;
-                    } else {
-                        state = ParsingState.BODY;
-
-                        if (isEncounteringCodeblockDelimiter) {
-                            docstringParsingState = DocstringParsingState.IN_DOCSTRING;
-                            indentationOfDocstring = StringUtil.findIndentation(line);
+                    switch (frontmatterParsingState) {
+                        case IN_FRONTMATTER:
+                            if (isEncounteringFrontmatterDelimiter) {
+                                frontmatterParsingState = FrontmatterParsingState.OUTSIDE_FRONTMATTER;
+                            }
 
                             sb
-                                    .append(trimConverter.convert(language, line))
+                                    .append(line)
                                     .append("\n");
-                        } else if (isEncounteringComment) {
-                            continue;
-                        } else {
-                            final Language finalLanguage = language;
-                            final List<SingleLineConverter> chosenConverters = converters
-                                    .stream()
-                                    .filter(converter -> converter.isRelevant(finalLanguage, line))
-                                    .collect(toList());
-
-                            if (chosenConverters.isEmpty()) {
+                            break;
+                        case OUTSIDE_FRONTMATTER:
+                            if (state == ParsingState.HEADER && line.trim().startsWith("# language:") && !wasLanguageFound) {
+                                language = Language.language(line);
+                                wasLanguageFound = true;
+                            } else if (state == ParsingState.HEADER && line.trim().startsWith(PREPROCESSOR_CHARACTER)) {
+                                // Skipping other preprocessing directives, such as encoding.
+                                continue;
+                            } else if (state == ParsingState.HEADER && isEncounteringFrontmatterDelimiter) {
+                                frontmatterParsingState = FrontmatterParsingState.IN_FRONTMATTER;
                                 sb
-                                        .append(trimConverter.convert(finalLanguage, line))
+                                        .append(line)
                                         .append("\n");
                             } else {
-                                String converted = line;
-                                for (final SingleLineConverter c : chosenConverters) {
-                                    converted = c.convert(language, converted);
+                                state = ParsingState.BODY;
+
+                                if (isEncounteringCodeblockDelimiter) {
+                                    docstringParsingState = DocstringParsingState.IN_DOCSTRING;
+                                    indentationOfDocstring = StringUtil.findIndentation(line);
+
+                                    sb
+                                            .append(trimConverter.convert(language, line))
+                                            .append("\n");
+                                } else if (isEncounteringComment) {
+                                    continue;
+                                } else {
+                                    final Language finalLanguage = language;
+                                    final List<SingleLineConverter> chosenConverters = converters
+                                            .stream()
+                                            .filter(converter -> converter.isRelevant(finalLanguage, line))
+                                            .collect(toList());
+
+                                    if (chosenConverters.isEmpty()) {
+                                        sb
+                                                .append(trimConverter.convert(finalLanguage, line))
+                                                .append("\n");
+                                    } else {
+                                        String converted = line;
+                                        for (final SingleLineConverter c : chosenConverters) {
+                                            converted = c.convert(language, converted);
+                                        }
+                                        sb
+                                                .append(converted)
+                                                .append("\n");
+                                    }
                                 }
-                                sb
-                                        .append(converted)
-                                        .append("\n");
                             }
-                        }
+                            break;
+                        default:
+                            throw new IllegalStateException("Unhandled frontmatter parsing state: " + frontmatterParsingState);
                     }
                     break;
                 default:
