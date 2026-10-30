@@ -30,7 +30,7 @@
 
         <picocli.version>4.7.7</picocli.version>
         <jgitflow-plugin.version>1.0-m5.1</jgitflow-plugin.version>
-        <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <git-commit-id-maven-plugin.version>10.0.1</git-commit-id-maven-plugin.version>
 
         <junit.version>4.13.2</junit.version>
         <assertj.version>3.27.7</assertj.version>
@@ -167,9 +167,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>pl.project13.maven</groupId>
-                    <artifactId>git-commit-id-plugin</artifactId>
-                    <version>${git-commit-id-plugin.version}</version>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>${git-commit-id-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -208,8 +208,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>${git-commit-id-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -218,7 +219,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- see https://github.com/ktoso/maven-git-commit-id-plugin/ for documentation-->
+                    <!-- se https://github.com/ktoso/maven-git-commit-id-plugin/ for dokumentasjon-->
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
