@@ -4,7 +4,7 @@
     <groupId>no.spk.misc.converter</groupId>
 
     <artifactId>spk-gherkin-to-md</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>spk-gherkin-to-md</name>
 
