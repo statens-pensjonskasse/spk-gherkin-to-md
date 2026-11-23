@@ -13,12 +13,12 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GherkinToMdConverterTest {
+class GherkinToMdConverterTest {
 
     @Test
-    public void shouldPerformAnAdhocTest() throws IOException, URISyntaxException {
+    void shouldPerformAnAdhocTest() throws IOException, URISyntaxException {
         final List<String> featureFiles = allFeaturesInResourceFolder("/adhoc");
 
         featureFiles.forEach(
@@ -42,7 +42,7 @@ public class GherkinToMdConverterTest {
     }
 
     @Test
-    public void shouldConvertAllFilesIntermediateFolderCorrectly() throws IOException, URISyntaxException {
+    void shouldConvertAllFilesIntermediateFolderCorrectly() throws IOException, URISyntaxException {
         final List<String> featureFiles = allFeaturesInResourceFolder("/intermediate");
 
         featureFiles.forEach(
@@ -66,7 +66,7 @@ public class GherkinToMdConverterTest {
     }
 
     @Test
-    public void shouldConvertAllFilesSimpleFolderCorrectly() throws IOException, URISyntaxException {
+    void shouldConvertAllFilesSimpleFolderCorrectly() throws IOException, URISyntaxException {
         final List<String> featureFiles = allFeaturesInResourceFolder("/simple");
 
         featureFiles.forEach(
